@@ -1,0 +1,5 @@
+name: Audio Visualizer
+description: This is an audio visualizer for Drupal 8
+core: 8.x
+package: The Thinkrium
+type: module

@@ -1,0 +1,10 @@
+audio_visualizer.content:
+  path: '/admin/config/media/audio_visualizer'
+  defaults:
+    _controller: '\Drupal\audio_visualizer\Controller\audio_visualizer_config::content'
+    _title: 'Hello World'
+  requirements:
+    _permission: 'access content'
+    
+    
+    #/admin/config/media/audio_visualizer/test

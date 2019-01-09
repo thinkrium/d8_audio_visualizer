@@ -1,0 +1,5 @@
+audio_visualizer.admin:
+  title: "Audio Visualizer Config"
+  description: "This page configures the audio visualizer"
+  parent: system.admin_config_media
+  route_name: audio_visualizer.content

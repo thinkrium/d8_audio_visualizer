@@ -1,0 +1,110 @@
+<?php
+
+   // open deirectory in defualt and store config audio there
+   
+   function audio_visualizer_install() {
+        if(!file_exists("sites/default/files/audio_visualizer")) {
+           drupal_mkdir("sites/default/files/audio_visualizer/config", null , true);
+        }
+    }
+
+   function audio_visualizer_schema() {
+      $schema = array();
+      
+      $schema["audio_visualizer_config"] = array(
+          "description" => "The config set up for the audio visualizer module.",
+          "fields" => array(
+              "audio_vis_id" => array(
+                  "type" => "serial", 
+                  "unsigned" => true,
+                  "not null" => true,
+                  "description" => "The identifier for the visualizer config settings",
+              ),
+              "testing_audio_filename" => array(
+                 "type" => "varchar",
+                 "length" => 255,
+                 "not null" => false,
+                 "description" => "The file name for the audio track to test."
+              ),
+              "visualization_type" => array(
+                  "type" => "varchar",
+                  "not null" => true,
+                  "length" => 50,
+                  "description" => "Used to determine which visualization option to utilize.",
+              ),
+              "applied_pages" => array(
+                 "type" => "text",
+                 "size" => "normal",
+                 "not null" => true,
+                 "description" => "Determines which pages to apply the visualizer.",
+              ),
+          ),
+           "primary key" => array("audio_vis_id"),  
+      );
+      
+      return $schema;
+   }
+
+   function audio_visualizer_uninstall() {
+      remove_config_directory();
+   }
+
+   // remove_config_director
+   // parameter: None
+   // function: attempts to remove the config audio files and while setting
+   //           while setting a message for the user to see what was deleted
+   //
+   //           wraps a try block 
+   //           checks if the parent directory audio_visualizer exists
+   //           checks if the parent directory config exists inside audio_vis 
+   //           scans the directory for files
+   //           iterates through the directory and deletes the files
+   //           if that works than messages that they are deleted
+   //           deletes both the parent directories
+   //           if all that fails than messages the watchdog for errors
+   
+   // return : None
+   function remove_config_directory() {
+   
+      
+       // check for the audio visualizer directory and remove its contents including the children
+       try {
+       
+    
+     
+           if(file_exists("sites/default/files/audio_visualizer")) {
+       
+               if(file_exists("sites/default/files/audio_visualizer/config")) {
+               
+                   $files = scandir("sites/default/files/audio_visualizer/config");
+                   
+                   if(!empty($files) ) {
+                        foreach($files as $file) {
+
+                             if ($file != "." && $file != ".." ) {
+                             
+                                $deleted = unlink("sites/default/files/audio_visualizer/config/" . $file);
+                             
+                                 if($deleted) {
+                                      drupal_set_message("Deleted $file from your configuration directory");
+                                 }
+                             }
+                        }
+                    }  
+                }
+            }
+                 
+                drupal_rmdir("sites/default/files/audio_visualizer/config");
+                drupal_rmdir("sites/default/files/audio_visualizer");
+                 
+         }
+         catch(Exception $e) {
+            drupal_set_error("Something horribly wrong has happened and it didn't work. Check the .install file");
+            watchdog( $e );
+         }
+         
+         
+    }
+    
+  
+
